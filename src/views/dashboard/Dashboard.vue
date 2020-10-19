@@ -18,7 +18,7 @@
             <v-list-item @click="() => {}">
               <v-list-item-title>Perfil</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="() => {}">
+            <v-list-item @click="logout()">
               <v-list-item-title>Cerrar sesión</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -50,13 +50,25 @@
     </v-card>
 </template>
 
-<script>
-  export default {
-    data: () => ({
-      drawer: false,
-      group: null,
-    }),
+<script lang="ts">
+import router from '@/router';
+import { Component, Vue } from 'vue-property-decorator';
+import { mapMutations } from 'vuex';
+
+@Component({
+  methods: {
+    ...mapMutations(['destroyToken'])
   }
+})
+export default class Dashboard extends Vue {
+  drawer = false;
+  group = null;
+
+  public logout() {
+    this.destroyToken();
+    router.push('/')
+  }
+}
 </script>
 
 <style scoped>

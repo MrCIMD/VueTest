@@ -26,8 +26,12 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { User } from '../interfaces/user.interface';
+import { mapActions } from 'vuex';
+import router from '../router';
 
-@Component({})
+@Component({
+    methods: { ...mapActions(['login', 'register']) }
+})
 export default class FormAuth extends Vue {
     @Prop({required: true}) readonly context: string;
 
@@ -40,7 +44,7 @@ export default class FormAuth extends Vue {
       email: (v: any) => /.+@.+/.test(v) || 'E-mail must be valid.',
       min: (v: any) => v.length >= 8 || 'The password must have more than 8 characters' };
 
-    public send(){
+    public async send(){
         if (!this.valid) {
             this.error.err = true;
             this.error.msg = 'Form not valid';
@@ -49,17 +53,19 @@ export default class FormAuth extends Vue {
 
         switch (this.context) {
             case 'login':
-                console.log('Iniciando sesión de usuario');
+                this.error = await this.login(this.user);
                 break;
 
             case 'register':
-                console.log('Registrando usuario');
+                this.error = await this.register(this.user);
                 break;
         
             default:
                 break;
         }
-        console.log(this.user);
+
+        if (this.error.err) { return; }
+        router.push('/dashboard');
     }
 }
 </script>

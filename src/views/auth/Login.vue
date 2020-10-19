@@ -5,7 +5,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import FormAuth from '../../components/FormAuth.vue';
 
