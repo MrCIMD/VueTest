@@ -10,13 +10,17 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     auth: {},
+    roles: [],
   },
   mutations: {
-    saveToken(state, payload: IToken) {
-      state.auth = payload;
+    setRoles(state, payload) {
+      state.roles = payload;
+    },
+    saveToken(state, payload) {
+      localStorage.setItem("auth", JSON.stringify(payload));
     },
     destroyToken(state) {
-      state.auth = {};
+      localStorage.removeItem("auth");
     },
   },
   actions: {
@@ -28,12 +32,10 @@ export default new Vuex.Store({
 
       await axios
         .post(`${api}auth/login`, user)
-
-        .then((resp: IToken) => {
-          console.log(resp);
-          commit("saveToken", resp);
+        .then((resp: any) => {
+          console.log(resp.data);
+          commit("saveToken", resp.data);
         })
-
         .catch((err: any) => {
           status.err = true;
           switch (err.response.status) {
@@ -55,9 +57,9 @@ export default new Vuex.Store({
       const status = { err: false, msg: "" };
       await axios
         .post(`${api}auth/register`, user)
-        .then((resp: IToken) => {
-          console.log(resp);
-          commit("saveToken", resp);
+        .then((resp: any) => {
+          console.log(resp.data);
+          commit("saveToken", resp.data);
         })
         .catch((err: any) => {
           status.err = true;
@@ -72,6 +74,15 @@ export default new Vuex.Store({
           }
         });
       return status;
+    },
+    async getRoles({ commit }) {
+      const token: any = JSON.parse(localStorage.getItem("auth"));
+      const roles = await axios.get(`${api}roles`, {
+        headers: {
+          authorization: `Bearer ${token.token}`,
+        },
+      });
+      commit("setRoles", roles.data);
     },
   },
   modules: {},

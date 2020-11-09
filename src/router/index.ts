@@ -26,6 +26,24 @@ const routes: Array<RouteConfig> = [
     path: "/dashboard",
     name: "Dashboard",
     component: () => import("../views/dashboard/Dashboard.vue"),
+    children: [
+      {
+        path: "home",
+        name: "Home",
+        component: () => import("../views/dashboard/Home.vue"),
+      },
+      {
+        path: "users",
+        name: "UserIndex",
+        component: () => import("../views/dashboard/users/UserIndex.vue"),
+      },
+      {
+        path: "roles",
+        name: "RoleIndex",
+        component: () => import("../views/dashboard/roles/RoleIndex.vue"),
+      },
+      { path: "/dashboard*", redirect: "home" },
+    ],
   },
   { path: "*", redirect: "auth" },
 ];

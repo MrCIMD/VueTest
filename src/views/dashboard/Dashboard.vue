@@ -27,26 +27,26 @@
 
       <v-navigation-drawer v-model="drawer" absolute temporary>
         <v-list nav dense>
-          <v-list-item-group v-model="group" active-class="blue--text text--accent-4">
+          <v-list-item-group v-model="group" active-class="blue--text text--accent-4" 
+            v-for="(option, i) in sideMenu"
+            :key="i">
 
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>mdi-account</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Usuarios</v-list-item-title>
-            </v-list-item>
-
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>mdi-account-cash</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Roles</v-list-item-title>
-            </v-list-item>
+            <router-link :to="option.rute">
+              <v-list-item>
+                <v-list-item-icon>
+                    <v-icon>{{option.icon}}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>{{option.name}}</v-list-item-title>
+              </v-list-item>
+            </router-link>
 
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
-
+      
+      <div class="content">
+        <router-view></router-view>
+      </div>
     </v-card>
 </template>
 
@@ -61,8 +61,13 @@ import { mapMutations } from 'vuex';
   }
 })
 export default class Dashboard extends Vue {
-  drawer = false;
-  group = null;
+  public sideMenu: any[] = [
+    { name: 'Inicio', rute: '/dashboard/home', icon: 'mdi-home' },
+    { name: 'Usuarios', rute: '/dashboard/users', icon: 'mdi-account' },
+    { name: 'Roles', rute: '/dashboard/roles', icon: 'mdi-account-cash' }
+  ];
+  public drawer: boolean = false;
+  public group = null;
 
   public logout() {
     this.destroyToken();
@@ -74,5 +79,8 @@ export default class Dashboard extends Vue {
 <style scoped>
   .layout {
     height: 100%;
+  }
+  .content {
+    padding: 1rem;
   }
 </style>

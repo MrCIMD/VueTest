@@ -6,14 +6,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
 import FormAuth from './components/FormAuth.vue';
 
 export default Vue.extend({
   name: 'App',
 
   components: {
-    HelloWorld,
     FormAuth
   },
 
